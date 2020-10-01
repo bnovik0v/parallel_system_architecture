@@ -7,7 +7,7 @@
 5.
 
 ## HOW TO SETUP?
-install mpi
+install MPI
 ```
 sudo apt install mpich
 ```
