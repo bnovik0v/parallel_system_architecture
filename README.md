@@ -8,6 +8,6 @@
 
 ## HOW TO SETUP?
 install mpi
-'''
+```
 sudo apt install mpich
-'''
+```
