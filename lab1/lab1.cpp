@@ -3,8 +3,20 @@
 
 using namespace std;
 
+void setup(int &argc, char **argv, int &size, int &rank);
+void endup();
+
 int main(int argc, char **argv) {
     int size, rank;
+    setup(argc, argv, size, rank);
+
+
+    endup();
+    return 0;
+}
+
+void setup(int &argc, char **argv, int &size, int &rank)
+{
     int res;
 
     res = MPI_Init(&argc, &argv);
@@ -24,10 +36,11 @@ int main(int argc, char **argv) {
         fprintf(stderr, "MPI_Comm_rank failed\n");
         exit(0);
     }
+}
 
-    fprintf(stdout, "Hello World from rank %d of %d~\n", rank, size);
-
-    res = MPI_Finalize();
+void endup()
+{
+    int res = MPI_Finalize();
     if (res != MPI_SUCCESS) {
         fprintf(stderr, "MPI_Finalize failed\n");
         exit(0);
