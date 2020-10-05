@@ -33,23 +33,15 @@ int main(int argc, char **argv) {
     randFill2DMatrix(A, N);
     randFill2DMatrix(B, N);
 
-    double *bufA = new double[4];
-    MPI_Scatter(A, 4, MPI_DOUBLE, bufA, 4, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-    cout << "PR:" << rank << endl;
-    for (int i = 0; i < 4; i++)
-        cout << bufA[i] << " ";
-    cout << endl << endl;
-
-
     //linearMatrixMultiplication(A, B, C, N);
-    parallelMatrixMultiplication(A, B, C, N);
+    parallelMatrixMultiplication(A, B, C, N, rank, size);
 
+    /*if (rank==0) {
+        show2DMatrix(A, N);
+        show2DMatrix(B, N);
+        show2DMatrix(C, N);
+    }*/
 
-    /*show2DMatrix(A, N);
-    show2DMatrix(B, N);
-    show2DMatrix(C, N);
-*/
     free2DMatrix(A);
     free2DMatrix(B);
     free2DMatrix(C);
