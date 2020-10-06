@@ -1,20 +1,17 @@
 #pragma once
 
 #include <mpi/mpi.h>
-#include <iostream>
 
 void linearMatrixMultiplication(double *&A,  double *&B, double *&C, const int &n)
 {
     for (int i = 0; i < n; ++i)
         for (int j = 0; j < n; ++j)
             for (int k = 0; k < n; ++k)
-                C[i * n + j] += A[i * n + k] * B[k * n + j];
+                C[i * n + j] += A[i * n + k] * B[j * n + k];
 }
 
 void parallelMatrixMultiplication(double *&A,  double *&B, double *&C, const int &n, const int &procRank, const int &procAmount)
 {
-    std::cout << procRank << " " << procAmount << std::endl;
-
     int part = n * n / procAmount;
     int taskAmount = n / procAmount;
 
