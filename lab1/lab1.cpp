@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include "timer.h"
 
 #include "matrix_multiplication.h"
 
@@ -7,7 +8,6 @@ using namespace std;
 
 // MPI
 void setup(int &argc, char **argv, int &size, int &rank);
-
 void endup();
 
 // Matrix
@@ -21,30 +21,37 @@ int main(int argc, char **argv) {
     int size, rank;
     setup(argc, argv, size, rank);
 
-    const int N = 4;
-    double *A = nullptr;
-    double *B = nullptr;
-    double *C = nullptr;
+    Timer timer;
+    for (int i = 0; i < 10; ++i)
+    {
+        int N = 100 + i * 100;
 
-    generate2DMatrix(A, N);
-    generate2DMatrix(B, N);
-    generate2DMatrix(C, N);
+        double *A = nullptr;
+        double *B = nullptr;
+        double *C = nullptr;
 
-    randFill2DMatrix(A, N);
-    randFill2DMatrix(B, N);
+        generate2DMatrix(A, N);
+        generate2DMatrix(B, N);
+        generate2DMatrix(C, N);
 
-    //linearMatrixMultiplication(A, B, C, N);
-    parallelMatrixMultiplication(A, B, C, N, rank, size);
+        randFill2DMatrix(A, N);
+        randFill2DMatrix(B, N);
+
+        timer.reset();
+        //linearMatrixMultiplication(A, B, C, N);
+        parallelMatrixMultiplication(A, B, C, N, rank, size);
+        if (rank==0) cout << "Matrix dimension: " << N << ", Time: " << timer.elapsed() << endl;
+
+        free2DMatrix(A);
+        free2DMatrix(B);
+        free2DMatrix(C);
+    }
 
     /*if (rank==0) {
-        show2DMatrix(A, N);
-        show2DMatrix(B, N);
-        show2DMatrix(C, N);
+        //show2DMatrix(A, N);
+        //show2DMatrix(B, N);
+        //show2DMatrix(C, N);
     }*/
-
-    free2DMatrix(A);
-    free2DMatrix(B);
-    free2DMatrix(C);
 
     //MPI_FINALIZE
     endup();
