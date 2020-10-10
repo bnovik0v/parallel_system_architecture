@@ -17,35 +17,37 @@ void free2DMatrix(double *&M);
 void show2DMatrix(double *&M, const int &n);
 
 int main(int argc, char **argv) {
+    int size = 0, rank = -1;
+    double *A  = nullptr, *B  = nullptr, *C = nullptr;
+
     //MPI_INIT
-    int size, rank;
     setup(argc, argv, size, rank);
 
     Timer timer;
     for (int i = 0; i < 10; ++i)
-    {
-        int N = 100 + i * 100;
+        for (int j = 0; j < 5; ++j) {
+            int N = 10*i+10;
 
-        double *A = nullptr;
-        double *B = nullptr;
-        double *C = nullptr;
+            if (N % size != 0) continue;
 
-        generate2DMatrix(A, N);
-        generate2DMatrix(B, N);
-        generate2DMatrix(C, N);
+            generate2DMatrix(A, N);
+            generate2DMatrix(B, N);
+            generate2DMatrix(C, N);
 
-        randFill2DMatrix(A, N);
-        randFill2DMatrix(B, N);
+            randFill2DMatrix(A, N);
+            randFill2DMatrix(B, N);
 
-        timer.reset();
-        //linearMatrixMultiplication(A, B, C, N);
-        parallelMatrixMultiplication(A, B, C, N, rank, size);
-        if (rank==0) cout << "Matrix dimension: " << N << ", Time: " << timer.elapsed() << endl;
+            timer.reset();
 
-        free2DMatrix(A);
-        free2DMatrix(B);
-        free2DMatrix(C);
-    }
+            //linearMatrixMultiplication(A, B, C, N);
+            parallelMatrixMultiplication(A, B, C, N, rank, size);
+
+            if (rank == 0) cout << "d:" << N << ", t:" << timer.elapsed() << endl;
+
+            free2DMatrix(A);
+            free2DMatrix(B);
+            free2DMatrix(C);
+        }
 
     /*if (rank==0) {
         //show2DMatrix(A, N);
