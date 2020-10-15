@@ -2,7 +2,7 @@
 
 1. Parallel Matrix Multiplication
 2.
-3. System of Linear Qquations Parallel Solving
+3. Parallel Solving of Linear Equations System
 4.
 5.
 
