@@ -1,22 +1,34 @@
 
 #include <cstdlib>
+#include <iostream>
 
-void fillMatrix(double *& matrix, const int &N, const int &M);
+#include "linear_quatuions_jakobi.h"
 
-void yakobi(double *& A, double *& x, double *& b, const int &N);
+void fillMatrix(double *& matrix, const int & N);
+
 
 int main()
 {
+    const int N = 4;
 
-    double *A = new double [16],
-           *x = new double [4],
-           *b = new double [4];
+    double *A = new double [N * N],
+           *x = new double [N],
+           *b = new double [N];
 
-    fillMatrix(A, 4, 4);
-    fillMatrix(b, 4, 1);
+    fillMatrix(A, N * N);
+    fillMatrix(b, N);
+
+    for (int i = 0; i < N; ++i) {
+        A[i * N + i] = 1000;
+        x[i] = b[i] / A[i * N + i];
+    }
+
+    yakobi(A, x, b, N);
 
 
-
+    for (int i = 0; i < N; ++i) {
+        std::cout << x[i] << " ";
+    }
 
 
     delete [] A;
@@ -26,31 +38,11 @@ int main()
     return 0;
 }
 
-void fillMatrix(double *& matrix, const int &N, const int &M)
+void fillMatrix(double *& matrix, const int &N)
 {
-    for (int i = 0; i < N * M; ++i)
-            matrix[i] = rand();
+    for (int i = 0; i < N; ++i)
+            matrix[i] = rand() % 10 + 1;
 }
 
 
 
-void yakobi(double *& A, double *& x, double *& b, const int &N)
-{
-    // e = 0.001
-    //
-    // x_next = nullptr
-    // x_cur = x
-
-
-    //do
-    // x_next = A
-    //
-    //while norm(x_n - x_n-1) >= e
-
-
-
-
-
-
-
-}
