@@ -1,8 +1,8 @@
 # PARALLEL SYSTEM ARCHITECTURE LABS
 
-1. Parallel Matrix Multiplication
+1. Parallel Matrix Multiplication (MPI)
 2.
-3. Parallel Solving of Linear Equations System
+3. Parallel Solving of Linear Equations System (MPI)
 4.
 5.
 
