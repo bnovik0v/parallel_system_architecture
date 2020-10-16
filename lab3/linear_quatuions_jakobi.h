@@ -9,21 +9,20 @@ double calcRelativeX(double *& a, const int & shifta, double *& x, double & b, c
     double rel_x = 0;
 
     for (int i = 0; i < N; ++i)
-        rel_x += a[i] * x[i];
+        if (i != shifta)
+            rel_x += a[i] * x[i];
 
     return (b - rel_x) / a[shifta];
 }
 
 double calcAccuracy(double *& x1, double *& x0, const int & N)
 {
-    double maxDiff = 0;
-    double curDiff = 0;
+    double norm = 0;
 
     for (int i = 0; i < N; ++i)
-        if ((curDiff = x1[i] - x0[i]) > maxDiff)
-            maxDiff = curDiff;
+        norm += (x1[i] - x0[i]) * (x1[i] - x0[i]);
 
-    return sqrt(maxDiff);
+    return sqrt(norm);
 }
 
 void yakobi(double *& A, double *& x, double *& b, const int &N)
