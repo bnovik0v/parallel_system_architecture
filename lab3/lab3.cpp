@@ -19,24 +19,15 @@ int main()
     fillMatrix(b, N);
 
     for (int i = 0; i < N; ++i) {
-        A[i * N + i] = 10 + (rand() % 90);
+        A[i * N + i] = A[i * N + i] * 10;
         x[i] = b[i] / A[i * N + i];
     }
 
-    for (int i = 0; i < N*N; ++i) {
-        std::cout << A[i] << " ";
-    }
-    std::cout << std::endl;
-    for (int i = 0; i < N; ++i) {
-        std::cout << b[i] << " ";
-    }
+
 
     yakobi(A, x, b, N);
 
 
-    for (int i = 0; i < N; ++i) {
-        std::cout << x[i] << " ";
-    }
 
 
     delete [] A;
@@ -49,7 +40,7 @@ int main()
 void fillMatrix(double *& matrix, const int &N)
 {
     for (int i = 0; i < N; ++i)
-            matrix[i] = rand() % 10;
+        matrix[i] = (rand() % 10) + 1;
 }
 
 
