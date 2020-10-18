@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "mpi_init.h"
 #include "linear_quatuions_jakobi.h"
 
 void fillMatrix(double *& matrix, const int & N);
