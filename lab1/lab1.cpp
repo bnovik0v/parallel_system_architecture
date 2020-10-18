@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 
             timer.reset();
 
-            //linearMatrixMultiplication(A, B, C, N);
+            //matrixMultiplication(A, B, C, N);
             parallelMatrixMultiplication(A, B, C, N, rank, size);
 
             if (rank == 0) cout << "d:" << N << ", t:" << timer.elapsed() << endl;
