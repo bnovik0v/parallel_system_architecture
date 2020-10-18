@@ -2,13 +2,10 @@
 #include <cstdlib>
 #include "timer.h"
 
+#include "mpi_init.h"
 #include "matrix_multiplication.h"
 
 using namespace std;
-
-// MPI
-void setup(int &argc, char **argv, int &size, int &rank);
-void endup();
 
 // Matrix
 void generate2DMatrix(double *&M, const int &n);
@@ -26,7 +23,7 @@ int main(int argc, char **argv) {
     Timer timer;
     for (int i = 0; i < 10; ++i)
         for (int j = 0; j < 5; ++j) {
-            int N = 10*i+10;
+            int N = 100*i+100;
 
             if (N % size != 0) continue;
 
@@ -59,37 +56,6 @@ int main(int argc, char **argv) {
     endup();
 
     return 0;
-}
-
-void setup(int &argc, char **argv, int &size, int &rank)
-{
-    int res;
-
-    res = MPI_Init(&argc, &argv);
-    if (res != MPI_SUCCESS) {
-        fprintf(stderr, "MPI_Init failed\n");
-        exit(0);
-    }
-
-    res = MPI_Comm_size(MPI_COMM_WORLD, &size);
-    if (res != MPI_SUCCESS) {
-        fprintf(stderr, "MPI_Comm_size failed\n");
-        exit(0);
-    }
-
-    res = MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if (res != MPI_SUCCESS) {
-        fprintf(stderr, "MPI_Comm_rank failed\n");
-        exit(0);
-    }
-}
-
-void endup() {
-    int res = MPI_Finalize();
-    if (res != MPI_SUCCESS) {
-        fprintf(stderr, "MPI_Finalize failed\n");
-        exit(0);
-    }
 }
 
 void generate2DMatrix(double *&M, const int &n)
