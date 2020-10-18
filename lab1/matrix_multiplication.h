@@ -2,7 +2,7 @@
 
 #include <mpi/mpi.h>
 
-void linearMatrixMultiplication(double *&A,  double *&B, double *&C, const int &n)
+void matrixMultiplication(double *&A,  double *&B, double *&C, const int &n)
 {
     for (int i = 0; i < n; ++i)
         for (int j = 0; j < n; ++j)
