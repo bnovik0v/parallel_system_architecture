@@ -8,8 +8,11 @@
 void fillMatrix(double *& matrix, const int & N);
 
 
-int main()
+int main(int argc, char **argv)
 {
+    int size, rank;
+    mpi_setup(argc, argv, size, rank);
+
     const int N = 4;
 
     double *A = new double [N * N],
@@ -34,6 +37,8 @@ int main()
     delete [] A;
     delete [] x;
     delete [] b;
+
+    mpi_endup();
 
     return 0;
 }

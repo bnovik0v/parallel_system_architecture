@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     double *A  = nullptr, *B  = nullptr, *C = nullptr;
 
     //MPI_INIT
-    setup(argc, argv, size, rank);
+    mpi_setup(argc, argv, size, rank);
 
     Timer timer;
     for (int i = 0; i < 10; ++i)
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     }*/
 
     //MPI_FINALIZE
-    endup();
+    mpi_endup();
 
     return 0;
 }

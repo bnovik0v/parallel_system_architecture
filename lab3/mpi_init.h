@@ -2,7 +2,7 @@
 
 #include <mpi.h>
 
-void setup(int &argc, char **argv, int &size, int &rank)
+void mpi_setup(int &argc, char **argv, int &size, int &rank)
 {
     int res;
 
@@ -25,7 +25,7 @@ void setup(int &argc, char **argv, int &size, int &rank)
     }
 }
 
-void endup() {
+void mpi_endup() {
     int res = MPI_Finalize();
     if (res != MPI_SUCCESS) {
         fprintf(stderr, "MPI_Finalize failed\n");
