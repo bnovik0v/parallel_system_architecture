@@ -3,6 +3,8 @@
 #include <cstring>
 #include <cmath>
 
+#include <iostream>
+
 const double EPS = 0.001;
 
 double calcRelativeX(double *& a, const int & rowN, double *& x, double & b, const int & N)
@@ -72,12 +74,13 @@ void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const
         memcpy(prevX, curX, sizeof(double) * N);
 
         for (int i = 0; i < taskAmountForProc; ++i) {
-            double *a = A + i * N;
+            double *a = bufA + i * N;
             int rowN = i + rank * taskAmountForProc;
-            bufX[i] = calcRelativeX(a, rowN, prevX, b[i], N);
+            bufX[i] = calcRelativeX(a, rowN, prevX, bufB[i], N);
         }
 
         MPI_Allgather(bufX, partOfX, MPI_DOUBLE, curX, partOfX, MPI_DOUBLE, MPI_COMM_WORLD);
+
     } while(calcAccuracy(curX, prevX, N) > EPS);
 
     memcpy(x, curX, sizeof(double) * N);

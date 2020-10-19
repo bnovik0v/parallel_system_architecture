@@ -14,26 +14,31 @@ int main(int argc, char **argv)
     int size, rank;
     mpi_setup(argc, argv, size, rank);
 
-    const int N = 4;
+    const int N = 12;
 
-    double *A = new double [N * N],
-           *x = new double [N],
-           *b = new double [N];
+    cout << "rank: " << rank << " size: " << size << endl;
+
+
+    auto *A = new double [N * N],
+         *x = new double [N],
+         *b = new double [N];
 
     fillMatrix(A, N * N);
     fillMatrix(b, N);
 
     for (int i = 0; i < N; ++i) {
-        A[i * N + i] = A[i * N + i] * 10; // матрица должна преобладать на диагонали
+        A[i * N + i] = A[i * N + i] * 1000; // матрица должна преобладать на диагонали
         x[i] = b[i] / A[i * N + i]; // подготовка
     }
 
-    //yakobi(A, x, b, N);
-    yakobi_parallel(A, x, b, N, rank, size);
 
-    for (int i = 0; i < N; ++i) {
-        cout << x[i] << " ";
-    }
+    yakobi(A, x, b, N);
+    //yakobi_parallel(A, x, b, N, rank, size);
+
+    if (rank == 0)
+        for (int i = 0; i < N; ++i) {
+            cout << x[i] << " ";
+        }
 
 
     delete [] A;
