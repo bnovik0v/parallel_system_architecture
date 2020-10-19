@@ -1,20 +1,18 @@
-
-#include <cstdlib>
 #include <iostream>
+#include <cstdlib>
 
 #include "mpi_init.h"
 #include "linear_quatuions_jakobi.h"
 #include "timer.h"
 
-void fillMatrix(double *& matrix, const int & N);
+using namespace std;
 
+void fillMatrix(double *& matrix, const int & N);
 
 int main(int argc, char **argv)
 {
     int size, rank;
     mpi_setup(argc, argv, size, rank);
-
-
 
 
     const int N = 4;
@@ -31,11 +29,8 @@ int main(int argc, char **argv)
         x[i] = b[i] / A[i * N + i];
     }
 
-
-
     yakobi(A, x, b, N);
-
-
+    //yakobi_parallel(A, x, b, N, rank, size);
 
 
     delete [] A;
