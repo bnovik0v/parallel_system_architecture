@@ -48,7 +48,7 @@ void yakobi(double *& A, double *& x, double *& b, const int & N)
     delete [] prevX;
 }
 
-void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const int & size, const int & rank)
+void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const int & rank, const int & size)
 {
     int taskAmountForProc = N / size;
 

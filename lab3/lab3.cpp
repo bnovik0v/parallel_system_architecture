@@ -14,7 +14,6 @@ int main(int argc, char **argv)
     int size, rank;
     mpi_setup(argc, argv, size, rank);
 
-
     const int N = 4;
 
     double *A = new double [N * N],
@@ -25,12 +24,16 @@ int main(int argc, char **argv)
     fillMatrix(b, N);
 
     for (int i = 0; i < N; ++i) {
-        A[i * N + i] = A[i * N + i] * 10;
-        x[i] = b[i] / A[i * N + i];
+        A[i * N + i] = A[i * N + i] * 10; // матрица должна преобладать на диагонали
+        x[i] = b[i] / A[i * N + i]; // подготовка
     }
 
-    yakobi(A, x, b, N);
-    //yakobi_parallel(A, x, b, N, rank, size);
+    //yakobi(A, x, b, N);
+    yakobi_parallel(A, x, b, N, rank, size);
+
+    for (int i = 0; i < N; ++i) {
+        cout << x[i] << " ";
+    }
 
 
     delete [] A;
