@@ -4,6 +4,7 @@
 
 #include "mpi_init.h"
 #include "linear_quatuions_jakobi.h"
+#include "timer.h"
 
 void fillMatrix(double *& matrix, const int & N);
 
@@ -12,6 +13,9 @@ int main(int argc, char **argv)
 {
     int size, rank;
     mpi_setup(argc, argv, size, rank);
+
+
+
 
     const int N = 4;
 
