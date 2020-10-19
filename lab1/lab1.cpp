@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cstdlib>
-#include "timer.h"
 
 #include "mpi_init.h"
 #include "matrix_multiplication.h"
+#include "timer.h"
 
 using namespace std;
 
