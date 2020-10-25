@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     std::ofstream out;
 
     if (rank == 0)
-        out.open(to_string(size) + "time.xml", ios::trunc);
+        out.open(to_string(size) + "time.csv", ios::trunc);
 
 
     Timer timer;
