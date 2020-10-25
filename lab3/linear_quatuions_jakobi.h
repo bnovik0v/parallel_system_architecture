@@ -30,6 +30,10 @@ double calcAccuracy(double *& x1, double *& x0, const int & N)
 
 void yakobi(double *& A, double *& x, double *& b, const int & N)
 {
+    for (int i = 0; i < N; ++i) {
+        x[i] = b[i] / A[i * N + i];
+    }
+
     auto * curX = new double [N];
     auto * prevX = new double [N];
 
@@ -52,6 +56,15 @@ void yakobi(double *& A, double *& x, double *& b, const int & N)
 
 void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const int & rank, const int & size)
 {
+    auto * curX = new double [N];
+
+    if (rank == 0) {                                        // process 0 prepares curX values
+        for (int i = 0; i < N; ++i)
+            curX[i] = b[i] / A[i * N + i];
+    }
+
+    MPI_Bcast(curX, N, MPI_DOUBLE, 0, MPI_COMM_WORLD); // process 0 sends the prepared value to all
+
     int taskAmountForProc = N / size;
 
     int partOfA = N * N / size;
@@ -65,10 +78,9 @@ void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const
     int partOfX = N / size;
     auto * bufX = new double [partOfB];
 
-    auto * curX = new double [N];
-    memcpy(curX, x, sizeof(double) * N);
-
     auto *prevX = new double[N];
+
+    auto * acc = new double;                                // accuracy of iteration
 
     do {
         memcpy(prevX, curX, sizeof(double) * N);
@@ -80,10 +92,19 @@ void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const
         }
 
         MPI_Allgather(bufX, partOfX, MPI_DOUBLE, curX, partOfX, MPI_DOUBLE, MPI_COMM_WORLD);
+                                                            // gather curX from all in bufX
+                                                                                // processes and send to them
 
-    } while(calcAccuracy(curX, prevX, N) > EPS);
+        if (rank == 0) // only rank 0 calculates accuracy
+            *acc = calcAccuracy(curX, prevX, N);
 
-    memcpy(x, curX, sizeof(double) * N);
+        MPI_Bcast(acc, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD); // process 0 sends accuracy to others
+
+        MPI_Barrier(MPI_COMM_WORLD);                        // wait until all processes to be here
+    } while(*acc > EPS);
+
+    if (rank == 0) // process 0 forms the result
+        memcpy(x, curX, sizeof(double) * N);
 
     delete [] bufA;
     delete [] bufB;
