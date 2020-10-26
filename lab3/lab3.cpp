@@ -18,14 +18,10 @@ int main(int argc, char **argv)
     cout << "rank: " << rank << " size: " << size << endl;
 
     std::ofstream out;
-
     if (rank == 0)
         out.open(to_string(size) + "time.csv", ios::trunc);
 
-
     Timer timer;
-
-    int coeff = 1;
 
     double *A = nullptr, *x = nullptr, *b = nullptr;
 

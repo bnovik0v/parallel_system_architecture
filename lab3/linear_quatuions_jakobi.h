@@ -7,6 +7,13 @@
 
 const double EPS = 0.001;
 
+void prepareX(double *& x, double *& A, double *& b, const int N)
+{
+    for (int i = 0; i < N; ++i) {
+        x[i] = b[i] / A[i * N + i];
+    }
+}
+
 double calcRelativeX(double *& a, const int & rowN, double *& x, double & b, const int & N)
 {
     double rel_x = 0;
@@ -30,14 +37,10 @@ double calcAccuracy(double *& x1, double *& x0, const int & N)
 
 void yakobi(double *& A, double *& x, double *& b, const int & N)
 {
-    for (int i = 0; i < N; ++i) {
-        x[i] = b[i] / A[i * N + i];
-    }
-
     auto * curX = new double [N];
     auto * prevX = new double [N];
 
-    memcpy(curX, x, sizeof(double) * N);
+    prepareX(curX, A, b, N);
 
     do {
         memcpy(prevX, curX, sizeof(double) * N);
@@ -58,10 +61,8 @@ void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const
 {
     auto * curX = new double [N];
 
-    if (rank == 0) {                                        // process 0 prepares curX values
-        for (int i = 0; i < N; ++i)
-            curX[i] = b[i] / A[i * N + i];
-    }
+    if (rank == 0)                                          // process 0 prepares curX values
+        prepareX(curX, A, b, N);
 
     MPI_Bcast(curX, N, MPI_DOUBLE, 0, MPI_COMM_WORLD); // process 0 sends the prepared value to all
 
