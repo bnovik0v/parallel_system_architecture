@@ -60,6 +60,7 @@ void yakobi(double *& A, double *& x, double *& b, const int & N)
 void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const int & rank, const int & size)
 {
     auto * curX = new double [N];
+    auto * prevX = new double[N];
 
     if (rank == 0)                                          // process 0 prepares curX values
         prepareX(curX, A, b, N);
@@ -67,19 +68,16 @@ void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const
     MPI_Bcast(curX, N, MPI_DOUBLE, 0, MPI_COMM_WORLD); // process 0 sends the prepared value to all
 
     int taskAmountForProc = N / size;
-
     int partOfA = N * N / size;
-    auto * bufA = new double [partOfA];
-    MPI_Scatter(A, partOfA, MPI_DOUBLE, bufA, partOfA, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
     int partOfB = N / size;
-    auto * bufB = new double [partOfB];
-    MPI_Scatter(b, partOfB, MPI_DOUBLE, bufB, partOfB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
     int partOfX = N / size;
+
+    auto * bufA = new double [partOfA];
+    auto * bufB = new double [partOfB];
     auto * bufX = new double [partOfB];
 
-    auto *prevX = new double[N];
+    MPI_Scatter(A, partOfA, MPI_DOUBLE, bufA, partOfA, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatter(b, partOfB, MPI_DOUBLE, bufB, partOfB, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     auto * acc = new double;                                // accuracy of iteration
 
@@ -112,4 +110,5 @@ void yakobi_parallel(double *& A, double *& x, double *& b, const int & N, const
     delete [] bufX;
     delete [] curX;
     delete [] prevX;
+    delete acc;
 }
