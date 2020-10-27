@@ -2,8 +2,7 @@
 
 #include <mpi.h>
 
-void mpi_setup(int &argc, char **argv, int &size, int &rank)
-{
+void mpi_setup(int &argc, char **argv, int &size, int &rank) {
     int res;
 
     res = MPI_Init(&argc, &argv);

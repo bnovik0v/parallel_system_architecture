@@ -8,19 +8,20 @@
 
 using namespace std;
 
-void fillMatrix(double *& matrix, const int & N, const int & M);
-void fillWithDiagonalDominance(double *& matrix, const int & N, const int & M);
+void fillMatrix(double *&matrix, const int &N, const int &M);
 
-int main(int argc, char **argv)
-{
+void fillWithDiagonalDominance(double *&matrix, const int &N, const int &M);
+
+int main(int argc, char **argv) {
     int size, rank;
     mpi_setup(argc, argv, size, rank);
     cout << "rank: " << rank << " size: " << size << endl;
 
     std::ofstream out;
-    if (rank == 0)
-        out.open(to_string(size) + "time.csv", ios::trunc);
-
+    if (rank == 0) {
+        out.open("solv_linear_eq_p" + to_string(size) + ".csv", ios::trunc);
+        out << "d,t" << endl;
+    }
     Timer timer;
 
     double *A = nullptr, *x = nullptr, *b = nullptr;
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
                 yakobi_parallel(A, x, b, N, rank, size);
 
             if (rank == 0) {                            // process 0 outputs the results
-                out << "p:" << size << ",d:" << N << ",t:" << timer.elapsed() << endl;
+                out << N << "," << timer.elapsed() << endl;
 
                 delete[] A;
                 delete[] x;
@@ -70,8 +71,8 @@ int main(int argc, char **argv)
 
     return 0;
 }
-void fillWithDiagonalDominance(double *& matrix, const int &N, const int &M)
-{
+
+void fillWithDiagonalDominance(double *&matrix, const int &N, const int &M) {
     double sum = 0;
 
     for (int i = 0; i < N; ++i)
@@ -83,8 +84,7 @@ void fillWithDiagonalDominance(double *& matrix, const int &N, const int &M)
         matrix[i * N + i] += sum;               // to make diagonal dominant
 }
 
-void fillMatrix(double *& matrix, const int &N, const int &M)
-{
+void fillMatrix(double *&matrix, const int &N, const int &M) {
     for (int i = 0; i < N * M; ++i)
         matrix[i] = (rand() % 10) + 1;          // fill matrix with random values
 }

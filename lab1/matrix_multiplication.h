@@ -2,16 +2,15 @@
 
 #include <mpi/mpi.h>
 
-void matrixMultiplication(double *&A,  double *&B, double *&C, const int &n)
-{
+void matrixMultiplication(double *&A, double *&B, double *&C, const int &n) {
     for (int i = 0; i < n; ++i)
         for (int j = 0; j < n; ++j)
             for (int k = 0; k < n; ++k)
                 C[i * n + j] += A[i * n + k] * B[j * n + k];
 }
 
-void parallelMatrixMultiplication(double *&A,  double *&B, double *&C, const int &n, const int &procRank, const int &procAmount)
-{
+void parallelMatrixMultiplication(double *&A, double *&B, double *&C, const int &n, const int &procRank,
+                                  const int &procAmount) {
     int part = n * n / procAmount;
     int taskAmount = n / procAmount;
 
@@ -31,13 +30,13 @@ void parallelMatrixMultiplication(double *&A,  double *&B, double *&C, const int
                 bufC[((i + procRank) % procAmount) * taskAmount + j * n + k] = temp;
             }
 
-        MPI_Sendrecv_replace(bufB, part, MPI_DOUBLE, ((procRank  - 1) < 0 ? procAmount - 1 : procRank  - 1),
+        MPI_Sendrecv_replace(bufB, part, MPI_DOUBLE, ((procRank - 1) < 0 ? procAmount - 1 : procRank - 1),
                              0, (procRank + 1) % procAmount, 0, MPI_COMM_WORLD, nullptr);
     }
 
     MPI_Gather(bufC, part, MPI_DOUBLE, C, part, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    delete [] bufA;
-    delete [] bufB;
-    delete [] bufC;
+    delete[] bufA;
+    delete[] bufB;
+    delete[] bufC;
 }
