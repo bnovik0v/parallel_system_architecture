@@ -1,8 +1,11 @@
 #include <cstdlib>
-
-#include <omp.h>
+#include <iostream>
 
 #include "square_root_method.h"
+
+#include "timer.h"
+
+using namespace std;
 
 
 void fillSymmetricMatrixWithRandValues(double *&M, const int &N);
@@ -14,7 +17,7 @@ int main() {
 
     double *A = nullptr, *b = nullptr, *x = nullptr;
 
-    const int N = 4;
+    const int N = 1000;
 
     A = new double [N * N];
     b = new double [N];
@@ -24,11 +27,19 @@ int main() {
     addDiagonalDominanceToMatrix(A, N); // matrix should be positive determined
     fillVectWithRandValues(b, N);
 
+    Timer time;
 
-    squareRootMethod(A, b, x, N);
+    time.reset();
+
+    //squareRootMethod(A, b, x, N);
+
+    squareRootMethodParallel(A, b, x, N, 2);
+
+    cout << time.elapsed() << endl;
 
 
-    for (int i = 0; i < N; ++i) {
+
+    /*for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             cout << A[i * N + j] << " ";
         }
@@ -46,7 +57,7 @@ int main() {
         cout << x[i] << " ";
     }
     cout << endl;
-    cout << endl;
+    cout << endl;*/
 
 
     delete [] A;
