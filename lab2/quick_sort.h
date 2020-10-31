@@ -3,7 +3,7 @@
 #include <omp.h>
 
 namespace myalg {
-    int partition(std::vector<int> &vec, int low, int high) {
+    int __partition__(std::vector<int> &vec, int low, int high) {
         int i = low;
         int j = high;
         int pivot = low; //(i + j) / 2;
@@ -20,34 +20,34 @@ namespace myalg {
         return j;
     }
 
-    void qsort(std::vector<int> &vec, int low, int high) {
+    void __qsort__(std::vector<int> &vec, int low, int high) {
         if (low < high) {
-            int p = partition(vec, low, high);
-            qsort(vec, low, p - 1);
-            qsort(vec, p + 1, high);
+            int p = __partition__(vec, low, high);
+            __qsort__(vec, low, p - 1);
+            __qsort__(vec, p + 1, high);
         }
     }
 
     void qsort(std::vector<int> &vec) {
-        qsort(vec, 0, vec.size());
+        __qsort__(vec, 0, vec.size());
     }
 
-    void pqsort(std::vector<int> &vec, int low, int high) {
+    void __pqsort__(std::vector<int> &vec, int low, int high) {
         if (low < high) {
-            int p = partition(vec, low, high);
-#pragma omp task shared(vec) firstprivate(low, high)
-            pqsort(vec, low, p - 1);
-#pragma omp task shared(vec) firstprivate(low, high)
-            pqsort(vec, p + 1, high);
+            int p = __partition__(vec, low, high);
+            #pragma omp task shared(vec) firstprivate(low, high)
+                __pqsort__(vec, low, p - 1);
+            #pragma omp task shared(vec) firstprivate(low, high)
+                __pqsort__(vec, p + 1, high);
         }
     }
 
 
     void pqsort(std::vector<int> &vec) {
-#pragma omp parallel shared(vec)
+        #pragma omp parallel shared(vec) default(none)
         {
-#pragma omp single nowait
-            pqsort(vec, 0, vec.size());
+            #pragma omp single nowait
+                __pqsort__(vec, 0, vec.size());
         }
     }
 }
