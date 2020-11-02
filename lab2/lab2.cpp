@@ -46,6 +46,8 @@ clock_t estimate_time(void (*sort_func)(std::vector<int> &), const int &size, co
 }
 
 int main() {
+    srand(time(nullptr));
+
     int num_threads = 4;
 
     omp_set_num_threads(num_threads);
