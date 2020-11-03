@@ -20,7 +20,7 @@ int main() {
 
     double *A = nullptr, *b = nullptr, *x = nullptr;
 
-    const int N = 500;
+    const int N = 2000;
 
     A = new double [N * N];
     b = new double [N];
