@@ -12,12 +12,15 @@ void fillSymmetricMatrixWithRandValues(double *&M, const int &N);
 void fillVectWithRandValues(double *&V, const int &N);
 void addDiagonalDominanceToMatrix(double *&M, const int &N);
 
+void showMatrix(double *&M, const int &N);
+void showVect(double *&V, const int &N);
+
 
 int main() {
 
     double *A = nullptr, *b = nullptr, *x = nullptr;
 
-    const int N = 1000;
+    const int N = 500;
 
     A = new double [N * N];
     b = new double [N];
@@ -27,37 +30,21 @@ int main() {
     addDiagonalDominanceToMatrix(A, N); // matrix should be positive determined
     fillVectWithRandValues(b, N);
 
+    //showMatrix(A, N);
+    //showVect(b, N);
+
     Timer time;
 
     time.reset();
-
-    //squareRootMethod(A, b, x, N);
-
-    squareRootMethodParallel(A, b, x, N, 2);
-
+    squareRootMethod(A, b, x, N);
     cout << time.elapsed() << endl;
+    //showVect(x, N);
 
 
-
-    /*for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < N; ++j) {
-            cout << A[i * N + j] << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
-
-    for (int i = 0; i < N; ++i) {
-        cout << b[i] << " ";
-    }
-    cout << endl;
-    cout << endl;
-
-    for (int i = 0; i < N; ++i) {
-        cout << x[i] << " ";
-    }
-    cout << endl;
-    cout << endl;*/
+    time.reset();
+    squareRootMethodParallel(A, b, x, N, 2);
+    cout << time.elapsed() << endl;
+    //showVect(x, N);
 
 
     delete [] A;
@@ -65,6 +52,26 @@ int main() {
     delete [] x;
 
     return 0;
+}
+
+void showVect(double *&V, const int &N)
+{
+    for (int i = 0; i < N; ++i) {
+        cout << V[i] << " ";
+    }
+    cout << endl;
+    cout << endl;
+}
+
+void showMatrix(double *&M, const int &N)
+{
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            cout << M[i * N + j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
 }
 
 void fillSymmetricMatrixWithRandValues(double *&M, const int &N) {
