@@ -62,7 +62,7 @@ void squareRootMethodParallel(double *&A, double *&b, double *&x, const int &N, 
     double *G = new double[N * N]; //int sizeG = N * (N + 1) / 2;
     double *y = new double[N];
 
-#pragma omp parallel default(none) shared(A, b, x, N, G, y, threadsN)
+#pragma omp parallel default(none) shared(A, b, x, N, G, y)
     {
 #pragma omp single
         {
@@ -70,7 +70,7 @@ void squareRootMethodParallel(double *&A, double *&b, double *&x, const int &N, 
             y[0] = b[0] / G[0];
         }
 
-#pragma omp for schedule(static, N/threadsN)
+#pragma omp for schedule(static)
         for (int j = 1; j < N; ++j) {
             G[j * N] = A[j * N] / G[0];
         }
@@ -79,7 +79,7 @@ void squareRootMethodParallel(double *&A, double *&b, double *&x, const int &N, 
             for (int j = 1; j <= i; ++j) {
                 double sumG = 0;
 
-#pragma for reduction(+ : sumG) schedule(static, N/threadsN)
+#pragma for reduction(+ : sumG) schedule(static)
                 for (int k = 0; k < i; ++k) {
                     sumG += G[i * N + k] * G[j * N + k];
                 }
@@ -96,7 +96,7 @@ void squareRootMethodParallel(double *&A, double *&b, double *&x, const int &N, 
 
             double sumGY = 0;
 
-#pragma for reduction(+ : sumGY) schedule(static, N/threadsN)
+#pragma for reduction(+ : sumGY) schedule(static)
             for (int k = 0; k < i; ++k) {
                 sumGY += G[i * N + k] * y[k];
             }
@@ -113,7 +113,7 @@ void squareRootMethodParallel(double *&A, double *&b, double *&x, const int &N, 
         for (int i = N - 2; i >= 0; --i) {
             double sumGY = 0;
 
-#pragma for reduction(+ : sumGY) schedule(static, N/threadsN)
+#pragma for reduction(+ : sumGY) schedule(static)
             for (int k = i + 1; k < N; ++k) {
                 sumGY += G[k * N + i] * x[k];
             }
