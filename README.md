@@ -2,9 +2,9 @@
 
 1. Parallel Matrix Multiplication (MPI)
 2.
-3. Parallel Solving of Linear Equations System (MPI)
+3. Parallel Solving of Linear Equations System: Yakobi Method (MPI)
 4.
-5.
+5. Parallel Solving of Linear Equations System: Square Root Method (OpenMP)
 
 ## HOW TO SETUP?
 install MPI
