@@ -2,8 +2,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <omp.h>
 
-#include "quick_sort.h"
+#include "shell_sort.h"
 
 
 std::vector<int> init_vector(const int &size) {
@@ -21,6 +22,7 @@ void print_vector(const std::vector<int> &vec) {
 }
 
 void sort_demo(void (*sort_func)(std::vector<int> &), const int &size) {
+    srand(0);
     std::vector<int> vec = init_vector(size);
 
     std::cout << "vector : ";
@@ -37,24 +39,27 @@ void sort_demo(void (*sort_func)(std::vector<int> &), const int &size) {
 clock_t estimate_time(void (*sort_func)(std::vector<int> &), const int &size, const int &count = 100) {
     double time = 0;
     for (int i = 0; i < count; i++) {
+        srand(0);
         std::vector<int> vec = init_vector(size);
+
         clock_t start = clock();
+
         sort_func(vec);
+
         time += (double) (clock() - start);
     }
     return time / count;
 }
 
 int main() {
-    int num_threads = 4;
-
-    omp_set_num_threads(num_threads);
-
-    sort_demo(&myalg::qsort, 10);
-    sort_demo(&myalg::pqsort, 10);
+    sort_demo(&myalg::shell_sort, 30);
+    sort_demo(&myalg::p_shell_sort, 30);
 
     std::cout << std::endl;
 
-    std::cout << "seq : " << estimate_time(myalg::qsort, 25000, 50) << " ticks" << std::endl;
-    std::cout << "par : " << estimate_time(myalg::pqsort, 25000, 50) << " ticks" << std::endl;
+    std::cout << "seq : " << estimate_time(&myalg::shell_sort, 500, 100) << " ticks" << std::endl;
+    omp_set_num_threads(2);
+    std::cout << "par 2: " << estimate_time(&myalg::p_shell_sort, 500, 100) << " ticks" << std::endl;
+    omp_set_num_threads(4);
+    std::cout << "par 4: " << estimate_time(&myalg::p_shell_sort, 500, 100) << " ticks" << std::endl;
 }
