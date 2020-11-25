@@ -9,7 +9,7 @@ void fillArray(double *&array, const int &N)
     srand(0);
 
     for (int i = 0; i < N; ++i) {
-        array[i] = rand() % 10;
+        array[i] = rand() % N;
     }
 }
 
@@ -37,7 +37,7 @@ int main() {
 
 
 
-    for (int N = 100; N <= 10000; N+=100)
+    for (int N = 100; N <= 50000; N+=100)
     {
         auto *array = new double[N];
 
