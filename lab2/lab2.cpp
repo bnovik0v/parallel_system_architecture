@@ -42,10 +42,10 @@ int main() {
 
                 timer.reset();
                 if (numThreads == 1) {
-                    qsort(array, N);
+                    qs::qsort(array, N);
                 }
                 else {
-                    pqsort(array, N, numThreads);
+                    qs::pqsort(array, N, numThreads);
                 }
                 fullTime += timer.elapsed();
             }
