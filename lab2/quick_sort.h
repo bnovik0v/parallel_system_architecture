@@ -1,15 +1,15 @@
 #pragma once
 
-int partition(double *&array, int start, int end) {
+int _partition(double *&array, int start, int end) {
     int temp;
     int marker = start;
 
-    for (int i = start; i <= end; i++) {
+    for (int i = start; i <= end; ++i) {
         if (array[i] < array[end]) {
             temp = array[marker];
             array[marker] = array[i];
             array[i] = temp;
-            marker += 1;
+            ++marker;
         }
     }
 

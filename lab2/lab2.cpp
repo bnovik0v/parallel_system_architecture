@@ -23,19 +23,11 @@ void printArray(double *&array, const int &N)
 
 
 int main() {
-
-    const int N = 10;
-
-
-
-
     Timer timer;
 
     std::ofstream out;
     out.open("qsort.csv", std::ios::trunc);
     out << "d,p1,p2,p4,p8" << std::endl;
-
-
 
     for (int N = 100; N <= 50000; N+=100)
     {
