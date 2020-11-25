@@ -24,7 +24,7 @@ void _qsort(double *&array, int start, int end) {
     if (start >= end) {
         return;
     }
-    int pivot = partition(array, start, end);
+    int pivot = _partition(array, start, end);
     _qsort(array, start, pivot - 1);
     _qsort(array, pivot + 1, end);
 }
@@ -37,7 +37,7 @@ void _pqsort(double *&array, int start, int end) {
     if (start >= end) {
         return;
     }
-    int pivot = partition(array, start, end);
+    int pivot = _partition(array, start, end);
 
 #pragma omp task
     _pqsort(array, start, pivot - 1);
