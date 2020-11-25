@@ -1,65 +1,69 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <vector>
-#include <omp.h>
+#include <fstream>
 
-#include "shell_sort.h"
+#include "quick_sort.h"
+#include "timer.h"
 
-
-std::vector<int> init_vector(const int &size) {
-    std::vector<int> vec(size);
-    for (int &i : vec) {
-        i = (int) random() % size;
-    }
-    return vec;
-}
-
-void print_vector(const std::vector<int> &vec) {
-    for (int i : vec) {
-        std::cout << i << " ";
-    }
-}
-
-void sort_demo(void (*sort_func)(std::vector<int> &), const int &size) {
+void fillArray(double *&array, const int &N)
+{
     srand(0);
-    std::vector<int> vec = init_vector(size);
 
-    std::cout << "vector : ";
-    print_vector(vec);
+    for (int i = 0; i < N; ++i) {
+        array[i] = rand() % 10;
+    }
+}
 
-    sort_func(vec);
-
-    std::cout << "\tsorted : ";
-    print_vector(vec);
-
+void printArray(double *&array, const int &N)
+{
+    for (int i = 0; i < N; ++i) {
+        std::cout << array[i] << " ";
+    }
     std::cout << std::endl;
 }
 
-clock_t estimate_time(void (*sort_func)(std::vector<int> &), const int &size, const int &count = 100) {
-    double time = 0;
-    for (int i = 0; i < count; i++) {
-        srand(0);
-        std::vector<int> vec = init_vector(size);
-
-        clock_t start = clock();
-
-        sort_func(vec);
-
-        time += (double) (clock() - start);
-    }
-    return time / count;
-}
 
 int main() {
-    sort_demo(&myalg::shell_sort, 30);
-    sort_demo(&myalg::p_shell_sort, 30);
 
-    std::cout << std::endl;
+    const int N = 10;
 
-    std::cout << "seq : " << estimate_time(&myalg::shell_sort, 500, 100) << " ticks" << std::endl;
-    omp_set_num_threads(2);
-    std::cout << "par 2: " << estimate_time(&myalg::p_shell_sort, 500, 100) << " ticks" << std::endl;
-    omp_set_num_threads(4);
-    std::cout << "par 4: " << estimate_time(&myalg::p_shell_sort, 500, 100) << " ticks" << std::endl;
+
+
+
+    Timer timer;
+
+    std::ofstream out;
+    out.open("qsort.csv", std::ios::trunc);
+    out << "d,p1,p2,p4,p8" << std::endl;
+
+
+
+    for (int N = 100; N <= 10000; N+=100)
+    {
+        auto *array = new double[N];
+
+        out << N;
+
+        for (int numThreads = 1; numThreads <= 8; numThreads*=2) {
+            double fullTime = 0;
+            for (int i = 0; i < 5; ++i) {
+                fillArray(array, N);
+
+                timer.reset();
+                if (numThreads == 1) {
+                    qsort(array, N);
+                }
+                else {
+                    pqsort(array, N, numThreads);
+                }
+                fullTime += timer.elapsed();
+            }
+            out << ","  << fullTime / 5;
+        }
+
+        delete [] array;
+
+        out << std::endl;
+    }
+
+    return 0;
 }
