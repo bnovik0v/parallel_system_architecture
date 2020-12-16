@@ -28,7 +28,7 @@ void show_matrix(vector<double> &arr, const int &N)
 
 int main()
 {
-    int N = 6;
+    int N = 4;
     vector<double> A(N*N);
     vector<double> B(N);
 
@@ -38,7 +38,7 @@ int main()
     show_matrix(A, N);
     show_matrix(B, N);
 
-    auto X = gauss(A, B);
+    auto X = p_gauss(A, B, 4);
 
     show_matrix(X, N);
 
