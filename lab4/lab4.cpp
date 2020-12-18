@@ -4,18 +4,20 @@
 #include <iostream>
 
 #include "gauss_method.h"
+#include "timer.h"
 
 
-void fill_array(vector<double> &arr)
+void fill_array(double *&arr, const int &N)
 {
-    for (double & el : arr) {
-        el = (rand() % 10) + 1;
+    srand(0);
+    for (int i = 0; i < N; ++i) {
+        arr[i] = (rand() % 10) + 1;
     }
 }
 
-void show_matrix(vector<double> &arr, const int &N)
+void show_matrix(double *&arr, const int &N, const int &M)
 {
-    for (int i = 0; i < arr.size(); ++i) {
+    for (int i = 0; i < N * M; ++i) {
         cout << arr[i] << " ";
 
         if ((i + 1) % N == 0)
@@ -28,19 +30,26 @@ void show_matrix(vector<double> &arr, const int &N)
 
 int main()
 {
-    int N = 4;
-    vector<double> A(N*N);
-    vector<double> B(N);
+    int N = 50;
 
-    fill_array(A);
-    fill_array(B);
 
-    show_matrix(A, N);
-    show_matrix(B, N);
+    double *A = new double[N*N];
+    double *B = new double[N];
+    double *X = new double[N];
 
-    auto X = p_gauss(A, B, 4);
+    fill_array(A, N * N);
+    fill_array(B, N);
 
-    show_matrix(X, N);
+    show_matrix(A, N, N);
+    show_matrix(B, N, 1);
+
+    p_gauss(A, B, X, N, 4);
+
+    show_matrix(X, N, 1);
+
+    delete [] A;
+    delete [] B;
+    delete [] X;
 
     return 0;
 }
