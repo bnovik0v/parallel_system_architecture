@@ -90,46 +90,40 @@ void p_gauss(double *&a, double *&b, double *&x, const int &N, const int &thread
                     swap(a[k * N + i], a[index * N + i]);
                 }
 
-#pragma omp task shared(b, index)
                 swap(b[k], b[index]);
 
-
+#pragma omp taskloop shared(a, b, N, eps, k)
                 for (int i = k; i < N; ++i) {
+
                     double temp = a[i * N + k];
 
                     if (abs(temp) < eps) {
                         continue;
                     }
 
-#pragma omp taskloop shared(a, i, temp)
                     for (int j = 0; j < N; ++j) {
                         a[i * N + j] /= temp;
                     }
 
-#pragma omp task shared(b, i, temp)
                     b[i] /= temp;
 
                     if (i == k) {
                         continue;
                     }
 
-#pragma omp taskloop shared(a, i, k, temp)
                     for (int j = 0; j < N; ++j) {
                         a[i * N + j] -= a[k * N + j];
                     }
 
-#pragma omp task shared(b, i, k, temp)
                     b[i] -= b[k];
                 }
             }
 
             for (int k = N - 1; k >= 0; --k) {
-#pragma omp task shared(x, k) depend(out:x[k])
                 x[k] = b[k];
 
-
+#pragma omp taskloop shared(a, b, x, k)
                 for (int i = 0; i < k; ++i) {
-#pragma omp task shared(a, b, x, k) depend(in:x[k])
                     b[i] -= a[i * N + k] * x[k];
                 }
             }

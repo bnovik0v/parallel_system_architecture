@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
         out.open("solv_linear_eq_p" + to_string(size) + ".csv", ios::trunc);
         out << "d,t" << endl;
     }
+
     Timer timer;
 
     double *A = nullptr, *x = nullptr, *b = nullptr;
